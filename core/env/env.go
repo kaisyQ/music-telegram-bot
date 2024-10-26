@@ -1,4 +1,4 @@
-package core
+package env
 
 import (
 	"fmt"
@@ -10,6 +10,7 @@ import (
 
 type Env struct {
 	TelegramBotToken string
+	DatabaseUrl      string
 }
 
 var instance *Env
@@ -41,12 +42,24 @@ func (env *Env) load() error {
 	var telegramBotToken = os.Getenv("TELEGRAM_BOT_TOKEN")
 
 	if telegramBotToken == "" {
-		log.Fatalln("Cannot find value by TELEGRAM_BOT_TOKEN key")
-
-		return fmt.Errorf("TELEGRAM_BOT_TOKEN environment variable is not set")
+		return printAndReturnError("TELEGRAM_BOT_TOKEN")
 	}
 
 	env.TelegramBotToken = telegramBotToken
 
+	var databaseUrl = os.Getenv("DATABASE_URL")
+
+	if databaseUrl == "" {
+		return printAndReturnError("DATABASE_URL")
+	}
+
+	env.DatabaseUrl = databaseUrl
+
 	return nil
+}
+
+func printAndReturnError(key string) error {
+	log.Fatalf("Cannot find value by %s key", key)
+
+	return fmt.Errorf("%s environment variable is not set", key)
 }

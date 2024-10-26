@@ -1,0 +1,20 @@
+services:
+   database:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: "telegram_bot"
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_INITDB_ARGS: --auth-host=trust
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "5477:5432"
+    container_name: telegram_bot_database
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

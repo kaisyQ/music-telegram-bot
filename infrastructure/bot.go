@@ -1,6 +1,9 @@
 package infrastructure
 
 import (
+	"context"
+	"kaisyq/tg/music/infrastructure/database"
+	chat_repository "kaisyq/tg/music/infrastructure/repositories"
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -11,6 +14,21 @@ type TelegramBot struct {
 }
 
 func (telegramBot TelegramBot) Init() {
+
+	database, error := database.GetInstance(context.Background())
+
+	if error != nil {
+		log.Fatal("error")
+	}
+
+	chatRepository := chat_repository.ChatRepository{Database: database}
+
+	er := chatRepository.Insert(context.Background(), uint32(1))
+
+	if er != nil {
+
+	}
+
 	bot, err := tgbotapi.NewBotAPI(telegramBot.Token)
 
 	if err != nil {
@@ -27,6 +45,9 @@ func (telegramBot TelegramBot) Init() {
 	updates := bot.GetUpdatesChan(u)
 
 	for update := range updates {
+
+		chatRepository.Insert(context.Background(), uint32(update.Message.Chat.ID))
+
 		if update.Message != nil {
 			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
