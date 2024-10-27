@@ -2,7 +2,7 @@ package database
 
 import (
 	"context"
-	"kaisyq/tg/music/core/env"
+	"kaisyq/tg/music/internal/core/env"
 	"log"
 	"sync"
 

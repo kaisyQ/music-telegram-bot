@@ -1,9 +1,9 @@
-package chat_repository
+package repositories
 
 import (
 	"context"
 	"fmt"
-	"kaisyq/tg/music/infrastructure/database"
+	"kaisyq/tg/music/internal/infrastructure/database"
 
 	"github.com/jackc/pgx/v5"
 )

@@ -2,8 +2,8 @@ package infrastructure
 
 import (
 	"context"
-	"kaisyq/tg/music/infrastructure/database"
-	chat_repository "kaisyq/tg/music/infrastructure/repositories"
+	"kaisyq/tg/music/internal/infrastructure/database"
+	"kaisyq/tg/music/internal/infrastructure/repositories"
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -21,7 +21,7 @@ func (telegramBot TelegramBot) Init() {
 		log.Fatal("error")
 	}
 
-	chatRepository := chat_repository.ChatRepository{Database: database}
+	chatRepository := repositories.ChatRepository{Database: database}
 
 	er := chatRepository.Insert(context.Background(), uint32(1))
 
