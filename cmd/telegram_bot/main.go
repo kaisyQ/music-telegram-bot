@@ -1,22 +1,24 @@
 package main
 
 import (
-	env "kaisyq/tg/music/internal/core/env"
-	"kaisyq/tg/music/internal/infrastructure"
-	"log"
+	"kaisyq/tg/music/internal/handlers"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	var env, err = env.GetInstance()
+	telegramBotHandler := handlers.New()
 
-	if err != nil {
-		log.Fatalln("Error occures while trying to load environment variables", err.Error())
-		panic(err.Error())
+	router := gin.Default()
+
+	{
+		v1 := router.Group("/v1")
+
+		telegram := v1.Group("/telegram-bot")
+
+		telegram.POST("/handle", telegramBotHandler.Handle)
+
 	}
 
-	// router := gin/
-
-	var telegramBot infrastructure.TelegramBot = infrastructure.TelegramBot{Token: env.TelegramBotToken}
-
-	telegramBot.Init()
+	router.Run(":8000")
 }

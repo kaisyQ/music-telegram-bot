@@ -22,5 +22,6 @@ func (repository ChatRepository) Insert(ctx context.Context, chatId uint32) erro
 	if err != nil {
 		return fmt.Errorf("unable to insert row: %w", err)
 	}
+
 	return nil
 }
