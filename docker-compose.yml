@@ -24,6 +24,17 @@ services:
     container_name: telegram_bot_app
     depends_on:
       - database
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=password
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
   db-data:
+  rabbitmq_data:
