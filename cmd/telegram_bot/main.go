@@ -2,6 +2,8 @@ package main
 
 import (
 	"kaisyq/tg/music/internal/handlers"
+	"kaisyq/tg/music/internal/handlers/consumers"
+	"kaisyq/tg/music/internal/infrastructure/producers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,6 +21,10 @@ func main() {
 		telegram.POST("/handle", telegramBotHandler.Handle)
 
 	}
+	producers.TestProducer()
+
+	consumers.TestConsumer()
 
 	router.Run(":8000")
+
 }
