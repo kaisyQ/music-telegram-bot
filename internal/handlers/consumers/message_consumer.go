@@ -43,7 +43,7 @@ func (consumer *MessageConsumer) Consume() {
 	defer ch.Close()
 
 	messages, err := ch.Consume(
-		"messages",
+		consumer.queueName,
 		"",
 		true,
 		false,
