@@ -2,7 +2,7 @@ package main
 
 import (
 	"kaisyq/tg/music/internal/handlers"
-	"kaisyq/tg/music/internal/handlers/consumers"
+	message_consumer "kaisyq/tg/music/internal/handlers/consumers"
 	"kaisyq/tg/music/internal/infrastructure/producers"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +23,7 @@ func main() {
 	}
 	producers.TestProducer()
 
-	consumers.TestConsumer()
+	message_consumer.New().Consume()
 
 	router.Run(":8000")
 

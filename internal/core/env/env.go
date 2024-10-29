@@ -11,6 +11,12 @@ import (
 type Env struct {
 	TelegramBotToken string
 	DatabaseUrl      string
+	RabbitmqUser     string
+	RabbitmqPassword string
+	RabbitmqHost     string
+	RabbitmqPort     string
+
+	MessagesQueueName string
 }
 
 var instance *Env
@@ -39,7 +45,7 @@ func (env *Env) load() error {
 		log.Fatalln("Cannot load .env file")
 	}
 
-	var telegramBotToken = os.Getenv("TELEGRAM_BOT_TOKEN")
+	telegramBotToken := os.Getenv("TELEGRAM_BOT_TOKEN")
 
 	if telegramBotToken == "" {
 		return printAndReturnError("TELEGRAM_BOT_TOKEN")
@@ -47,13 +53,53 @@ func (env *Env) load() error {
 
 	env.TelegramBotToken = telegramBotToken
 
-	var databaseUrl = os.Getenv("DATABASE_URL")
+	databaseUrl := os.Getenv("DATABASE_URL")
 
 	if databaseUrl == "" {
 		return printAndReturnError("DATABASE_URL")
 	}
 
 	env.DatabaseUrl = databaseUrl
+
+	rabbitmqUser := os.Getenv("RABBIT_MQ_USER")
+
+	if rabbitmqUser == "" {
+		return printAndReturnError("RABBIT_MQ_USER")
+	}
+
+	env.RabbitmqUser = rabbitmqUser
+
+	rabbitmqPassword := os.Getenv("RABBIT_MQ_PASSWORD")
+
+	if rabbitmqPassword == "" {
+		return printAndReturnError("RABBIT_MQ_PASSWORD")
+	}
+
+	env.RabbitmqPassword = rabbitmqPassword
+
+	rabbitmqHost := os.Getenv("RABBIT_MQ_HOST")
+
+	if rabbitmqHost == "" {
+		return printAndReturnError("RABBIT_MQ_HOST")
+	}
+
+	env.RabbitmqHost = rabbitmqHost
+
+	rabbitmqPort := os.Getenv("RABBIT_MQ_PORT")
+
+	if rabbitmqPort == "" {
+		return printAndReturnError("RABBIT_MQ_PORT")
+	}
+
+	env.RabbitmqPort = rabbitmqPort
+
+	messagesQueueName := os.Getenv("MESSAGES_QUEUE_NAME")
+
+	if messagesQueueName == "" {
+		return printAndReturnError("MESSAGES_QUEUE_NAME")
+	}
+
+	env.MessagesQueueName = messagesQueueName
 
 	return nil
 }
