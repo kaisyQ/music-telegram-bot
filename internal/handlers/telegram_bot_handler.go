@@ -1,27 +1,29 @@
 package handlers
 
 import (
-	"kaisyq/tg/music/internal/infrastructure/clients"
+	"encoding/json"
+	message_producer "kaisyq/tg/music/internal/infrastructure/producers"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 type TelegramBotHandler struct {
-	telegramClient *clients.TelegramBotClient
+	messageProducer *message_producer.MessageProducer
 }
 
 var instance *TelegramBotHandler
 
 func New() *TelegramBotHandler {
-
-	tg := clients.TelegramBotClient{}
-
-	client, _ := tg.New()
+	messageProducer := message_producer.New()
 
 	if instance == nil {
-		instance = &TelegramBotHandler{telegramClient: client}
+		instance = &TelegramBotHandler{
+			messageProducer: messageProducer,
+		}
 	}
 
 	return instance
@@ -36,6 +38,16 @@ func (handler TelegramBotHandler) Handle(c *gin.Context) {
 		return
 	}
 
-	handler.telegramClient.Send(uint64(update.Message.Chat.ID), "Новая обработка сообщения!")
+	m := make(map[string]string)
 
+	m["Message"] = "Новая обработка сообщний через очередь"
+	m["chatId"] = strconv.Itoa(int(update.Message.Chat.ID))
+
+	message, err := json.Marshal(m)
+
+	if err != nil {
+		log.Fatalln("Error while trying to encode json from map", err)
+	}
+
+	handler.messageProducer.Produce(message)
 }

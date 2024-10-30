@@ -39,7 +39,7 @@ func (client TelegramBotClient) New() (*TelegramBotClient, error) {
 	return instance, nil
 }
 
-func (client TelegramBotClient) Send(chatId uint64, messageText string) error {
+func (client TelegramBotClient) Send(chatId int64, messageText string) error {
 
 	message := tgbotapi.NewMessage(int64(chatId), messageText)
 

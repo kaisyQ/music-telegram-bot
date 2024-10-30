@@ -33,7 +33,7 @@ func New() *MessageProducer {
 	return &MessageProducer{con: con, queueName: env.MessagesQueueName}
 }
 
-func (producer *MessageProducer) Produce(message string) {
+func (producer *MessageProducer) Produce(message []byte) {
 	defer producer.con.Close()
 
 	ch, err := producer.con.Channel()
@@ -65,9 +65,11 @@ func (producer *MessageProducer) Produce(message string) {
 		false,
 		false,
 		amqp.Publishing{
-			ContentType: "text/plain",
-			Body:        []byte(message),
-		})
+			ContentType: "application/json",
+			Body:        message,
+		},
+	)
+
 	if err != nil {
 		log.Fatalf("failed to publish a message. Error: %s", err)
 	}
