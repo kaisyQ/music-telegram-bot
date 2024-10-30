@@ -3,7 +3,7 @@ package main
 import (
 	"kaisyq/tg/music/internal/handlers"
 	message_consumer "kaisyq/tg/music/internal/handlers/consumers"
-	"kaisyq/tg/music/internal/infrastructure/producers"
+	message_producer "kaisyq/tg/music/internal/infrastructure/producers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +21,7 @@ func main() {
 		telegram.POST("/handle", telegramBotHandler.Handle)
 
 	}
-	producers.TestProducer()
+	message_producer.New().Produce("New hello world!")
 
 	message_consumer.New().Consume()
 
