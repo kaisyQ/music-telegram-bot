@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Before running this script make sure tuna is installed on your device.
+# You can read more about it here: https://tuna.am/
+
 print_dottes() {
     for i in $(seq 1 10)
     do
