@@ -1,13 +1,22 @@
 package main
 
 import (
+	"fmt"
+	"kaisyq/tg/music/internal/core/env"
 	"kaisyq/tg/music/internal/handlers"
 	message_consumer "kaisyq/tg/music/internal/handlers/consumers"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	env, err := env.GetInstance()
+
+	if err != nil {
+		log.Println("Cannot load .env file")
+	}
+
 	telegramBotHandler := handlers.New()
 
 	router := gin.Default()
@@ -25,7 +34,7 @@ func main() {
 
 	go messageConsumer.Consume()
 
-	router.Run(":8000")
+	router.Run(fmt.Sprintf(":%d", env.RestApiPort))
 
 	messageConsumer.Close()
 }

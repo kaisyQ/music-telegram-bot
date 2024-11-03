@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -17,6 +18,8 @@ type Env struct {
 	RabbitmqPort     string
 
 	MessagesQueueName string
+
+	RestApiPort int
 }
 
 var instance *Env
@@ -44,6 +47,20 @@ func (env *Env) load() error {
 	if err != nil {
 		log.Fatalln("Cannot load .env file", err.Error())
 	}
+
+	restApiPortString := os.Getenv("REST_API_PORT")
+
+	if restApiPortString == "" {
+		return printAndReturnError("REST_API_PORT")
+	}
+
+	restApiPort, err := strconv.Atoi(restApiPortString)
+
+	if err != nil {
+		log.Fatalln("Error while trying to parse rest api port to int32", err.Error())
+	}
+
+	env.RestApiPort = restApiPort
 
 	telegramBotToken := os.Getenv("TELEGRAM_BOT_TOKEN")
 
