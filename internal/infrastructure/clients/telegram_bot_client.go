@@ -46,6 +46,7 @@ func (client TelegramBotClient) Send(chatId int64, messageText string) error {
 	_, err := client.api.Send(message)
 
 	if err != nil {
+		log.Fatalln("Error while sending a message to telegram", err.Error())
 		return err
 	}
 

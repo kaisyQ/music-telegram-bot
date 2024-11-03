@@ -42,7 +42,7 @@ func (env *Env) load() error {
 	err := godotenv.Load()
 
 	if err != nil {
-		log.Fatalln("Cannot load .env file")
+		log.Fatalln("Cannot load .env file", err.Error())
 	}
 
 	telegramBotToken := os.Getenv("TELEGRAM_BOT_TOKEN")

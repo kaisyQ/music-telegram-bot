@@ -30,7 +30,6 @@ func New() *TelegramBotHandler {
 }
 
 func (handler TelegramBotHandler) Handle(c *gin.Context) {
-
 	var update tgbotapi.Update
 
 	if err := c.BindJSON(&update); err != nil {
@@ -40,7 +39,7 @@ func (handler TelegramBotHandler) Handle(c *gin.Context) {
 
 	m := make(map[string]string)
 
-	m["Message"] = "Новая обработка сообщний через очередь"
+	m["message"] = "Новая обработка сообщний через очередь"
 	m["chatId"] = strconv.Itoa(int(update.Message.Chat.ID))
 
 	message, err := json.Marshal(m)

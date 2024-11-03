@@ -21,10 +21,11 @@ func main() {
 
 	}
 
-	go func() {
-		message_consumer.New().Consume()
-	}()
+	messageConsumer := message_consumer.New()
+
+	go messageConsumer.Consume()
 
 	router.Run(":8000")
 
+	messageConsumer.Close()
 }

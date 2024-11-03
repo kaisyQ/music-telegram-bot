@@ -11,6 +11,7 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
+// @TODO Create more flexible structure for working with consumers. Now its look like shit
 type MessageConsumer struct {
 	telegramClient *clients.TelegramBotClient
 	con            *amqp.Connection
@@ -21,7 +22,7 @@ func New() *MessageConsumer {
 	env, err := env.GetInstance()
 
 	if err != nil {
-		log.Fatalln("Cannot load .env file")
+		log.Fatalln("Cannot load .env file", err.Error())
 	}
 
 	rabbitUrl := config.GetRabbitUrl()
@@ -29,7 +30,7 @@ func New() *MessageConsumer {
 	con, err := amqp.Dial(rabbitUrl)
 
 	if err != nil {
-		log.Fatalln("Error while creating connect to queue")
+		log.Fatalln("Error while creating connect to queue", err.Error())
 	}
 
 	tg := clients.TelegramBotClient{}
@@ -40,22 +41,17 @@ func New() *MessageConsumer {
 }
 
 func (consumer *MessageConsumer) Consume() {
+	ch, err := consumer.con.Channel()
 	var forever chan struct{}
 	go func() {
-		ch, err := consumer.con.Channel()
 		if err != nil {
 			log.Fatalln("Error while create rabbitmq channel", err.Error())
 		}
 
-		//@TODO need to fix this closing connections(try to found try-with-resources interface alternative)
-
-		defer consumer.con.Close()
-		defer ch.Close()
-
 		messages, err := ch.Consume(
 			consumer.queueName,
 			"",
-			true,
+			false,
 			false,
 			false,
 			false,
@@ -63,29 +59,32 @@ func (consumer *MessageConsumer) Consume() {
 		)
 
 		if err != nil {
-			log.Fatalf("failed to register a consumer. Error: %s", err)
+			log.Fatalf("failed to register a consumer. Error: %s", err.Error())
 		}
 
 		for message := range messages {
-			// consumer.telegramClient.Send()
 			m := make(map[string]string)
 
 			err := json.Unmarshal(message.Body, &m)
 
 			if err != nil {
-				log.Fatalln("Error while trying to decode json", err)
+				log.Fatalln("Error while trying to decode json", err.Error())
 			}
 
 			chatId, err := strconv.ParseInt(m["chatId"], 10, 64)
 
 			if err != nil {
-				log.Fatalln("Error while trying to convert string to uint64")
+				log.Fatalln("Error while trying to convert string to uint64", err.Error())
 			}
 
 			consumer.telegramClient.Send(chatId, m["message"])
 		}
 	}()
 
-	log.Printf("Start consuming...")
+	log.Printf("Start consuming %s...", consumer.queueName)
 	<-forever
+}
+
+func (consumer *MessageConsumer) Close() {
+	defer consumer.con.Close()
 }

@@ -23,14 +23,14 @@ func GetInstance(ctx context.Context) (*Database, error) {
 	env, err := env.GetInstance()
 
 	if err != nil {
-		log.Fatal("There was an error while trying to get env instance")
+		log.Fatal("There was an error while trying to get env instance", err.Error())
 	}
 
 	databaseOnce.Do(func() {
 		db, err := pgxpool.New(ctx, env.DatabaseUrl)
 
 		if err != nil {
-			log.Fatalln("There was an error while trying to create database connection pool")
+			log.Fatalln("There was an error while trying to create database connection pool", err.Error())
 		}
 
 		DatabaseInstance = &Database{db}

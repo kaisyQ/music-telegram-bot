@@ -34,34 +34,22 @@ func New() *MessageProducer {
 }
 
 func (producer *MessageProducer) Produce(message []byte) {
-	defer producer.con.Close()
-
 	ch, err := producer.con.Channel()
 
 	if err != nil {
-		log.Fatalln("Error while create rabbitmq channel")
+		log.Fatalln("Error while create rabbitmq channel", err.Error())
 	}
 
 	defer ch.Close()
 
-	queue, err := ch.QueueDeclare(
-		producer.queueName,
-		false,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		log.Fatalf("failed to declare a queue. Error: %s", err)
-	}
-
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+
 	defer cancel()
 
-	err = ch.PublishWithContext(ctx,
+	err = ch.PublishWithContext(
+		ctx,
 		"",
-		queue.Name,
+		producer.queueName,
 		false,
 		false,
 		amqp.Publishing{
@@ -71,8 +59,12 @@ func (producer *MessageProducer) Produce(message []byte) {
 	)
 
 	if err != nil {
-		log.Fatalf("failed to publish a message. Error: %s", err)
+		log.Fatalf("failed to publish a message. Error: %s", err.Error())
 	}
 
-	log.Printf(" [x] Sent %s\n", message)
+	log.Printf("[x] Sent %s\n", message)
+}
+
+func (producer *MessageProducer) Close() {
+	defer producer.con.Close()
 }
