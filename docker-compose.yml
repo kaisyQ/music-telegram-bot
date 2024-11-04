@@ -12,7 +12,6 @@ services:
     ports:
       - "5477:5432"
     container_name: telegram_bot_database
-    restart: always
     volumes:
       - db-data:/var/lib/postgresql/data
   app:
@@ -20,18 +19,18 @@ services:
       context: .
       dockerfile: ./docker/app/Dockerfile
     ports:
-      - "8808:8000"
+      - "8808:${REST_API_PORT}"
     container_name: telegram_bot_app
     depends_on:
       - database
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:4-management-alpine
     ports:
-      - "5673:5672"
+      - "${RABBIT_MQ_PORT}:5672"
       - "15673:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_USER=${RABBIT_MQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASSWORD}
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 

@@ -33,7 +33,7 @@ print_dottes
 TUNA_URL=$(echo $1)
 
 if $TUNA_URL; then
-    echo "Tuna url was not found in bash script arguments.\\nExecuting script..."
+    echo "Tuna url was not found in bash script arguments.\\Exiting script..."
     exit 1
 fi
 

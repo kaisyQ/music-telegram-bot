@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+// @TODO create function for generating internal docker database url and fix connecion to rabbit inside docker
+
 func GetRabbitUrl() string {
 	env, err := env.GetInstance()
 
