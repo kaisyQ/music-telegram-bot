@@ -9,5 +9,5 @@ jobs:
   run make:
     runs-on: ubuntu-latest
     steps:
-      - name: "run make"
+      - name: run make
         run: make build
