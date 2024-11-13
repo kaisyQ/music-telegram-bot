@@ -3,32 +3,18 @@
 BASE_TELEGRAM_BOT_ENV_KEY="TELEGRAM_BOT_TOKEN"
 BASE_TELEGRAM_HANDLE_URL_ENV_KEY="TELEGRAM_HANDLE_URL"
 
-print_dottes() {
-    for i in $(seq 1 10)
-    do
-        echo ".\c"
-        sleep 0.05
-    done
-    echo
-}
-
 echo "Parsing .env values for setting up telegram webhook"
 
 echo "Getting telegram bot token..."
 
-print_dottes
 
 TELEGRAM_BOT_TOKEN=$(awk -F "=" '$1 == "'$BASE_TELEGRAM_BOT_ENV_KEY'" {print $2}' .env)
 
 echo "Getting telegram handle url for webhook..."
 
-print_dottes
-
 BASE_TELEGRAM_HANDLE_URL=$(awk -F "=" '$1 == "'$BASE_TELEGRAM_HANDLE_URL_ENV_KEY'" {print $2}' .env)
 
 echo "Getting tuna url from args..."
-
-print_dottes
 
 TUNA_URL=$(echo $1)
 
@@ -38,8 +24,6 @@ if $TUNA_URL; then
 fi
 
 echo "Creating http request to [https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook?url=$TUNA_URL/$BASE_TELEGRAM_HANDLE_URL]"
-
-print_dottes
 
 RESPONSE=$(curl -i https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook?url=$TUNA_URL/$BASE_TELEGRAM_HANDLE_URL)
 

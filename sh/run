@@ -1,16 +1,5 @@
 #!/bin/sh
 
-print_dottes() {
-    for i in $(seq 1 10)
-    do
-        echo ".\c"
-        sleep 0.05
-    done
-    echo
-}
-
 echo "Running web server..."
-
-print_dottes
 
 go run ./cmd/telegram_bot/main.go

@@ -3,27 +3,22 @@
 # Before running this script make sure tuna is installed on your device.
 # You can read more about it here: https://tuna.am/
 
-print_dottes() {
-    for i in $(seq 1 10)
-    do
-        echo ".\c"
-        sleep 0.05
-    done
-    echo
-}
 
 BASE_API_PORT_ENV_KEY="REST_API_PORT"
+TUNA_TOKEN_ENV_KEY="TUNA_TOKEN"
 
 echo "Making setup for tuna..."
 
 echo "Loading rest api port value from .env"
 
-print_dottes
-
 PORT=$(awk -F "=" '$1 == "'$BASE_API_PORT_ENV_KEY'" {print $2}' .env)
 
-echo "Running tuna's tunnel"
+echo "Loading tuna token from .env"
 
-print_dottes
+TUNA_TOKEN=$(awk -F "=" '$1 == "'$TUNA_TOKEN_ENV_KEY'" {print $2}' .env)
+
+tuna config save-token $TUNA_TOKEN
+
+echo "Running tuna's tunnel"
 
 tuna http $PORT
